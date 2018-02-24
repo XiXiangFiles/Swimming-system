@@ -116,6 +116,7 @@
 		<button class="addMe">Memory</button>
 		<button class="addSET">+SET</button><button class="subSET">-SET</button>
 		<button id="start">start</button>
+		<button id="pause">pause</button>
 	</div>
 	<article id="show"></article>
 	<script type="text/javascript">
@@ -141,7 +142,7 @@
 	   		if(temp!=s){
 	   			if (Sec==0 && Min !=0) {
 	   				Min--;
-	   				Sec=60;
+	   				Sec=59;
 	   			}
 	   			if (Sec==0 && Min==0) {
 	   				// console.log("1_length=\t"+length);
@@ -176,8 +177,10 @@
 	   			temp=s;
 	   			
 	   		}
-	   	}else{
+	   	}else if(start==0){
 			document.getElementById('txt').innerHTML =  checkTime(m) + ":" + checkTime(s);
+	   	}else if(start>1){
+	   		document.getElementById('txt').innerHTML = checkTime(Min) + ":" + checkTime(Sec);
 	   	}
 	    let t = setTimeout(startTime, 500);
 	}
@@ -204,12 +207,21 @@
 		$(".Min").val(check(++Min));
 	});
 	$(".subM").click(function(){
-		let Min=parseInt($(".Min").val());
-		$(".Min").val(check(--Min));
+		if(start==0){
+			let Min=parseInt($(".Min").val());
+			$(".Min").val(check(--Min));
+		}else{
+			Min++;
+		}
 	});
 	$(".addS").click(function(){
-		let Sec=parseInt($(".Sec").val());
-		$(".Sec").val(check(++Sec));
+		if(start==0){
+			let Sec=parseInt($(".Sec").val());
+			$(".Sec").val(check(++Sec));
+		}else{
+			Sec++;
+		}
+		
 	});
 	$(".subS").click(function(){
 		let Sec=parseInt($(".Sec").val());
@@ -236,7 +248,7 @@
 		}
 	});
 	$("#start").off().on('click',function(){
-		if(program.length>0){
+		if(program.length>0 && start==0){
 			let today = new Date();
 			temp=today.getSeconds();
 			start=1;
@@ -248,10 +260,16 @@
 			$(".P").val(1);
 			length++;
 			$(".Min,.Sec,.sm,.ss").css({'display':'none'});
+		}else if(start>1){
+			start=1;
+		}	
+	});
+	$("#pause").off().on('click',function(){
+		if (start==1) {
+			start++;
 		}else{
-
-		}
-		
+			
+		}	
 	});
 
 </script>
