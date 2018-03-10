@@ -5,101 +5,30 @@
 	<title>Clock</title>
 	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="js/browserMqtt.js"></script>
-	<style type="text/css">
-		/* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
+	<link rel="stylesheet" href="css/all.css">
+	
+<script>
+	function gettoken(){
+		let href=location.href;
+		let paremeter=href.split('?');
+		let token=paremeter[1].split("=");
+		return token[1];
+	}
+	let data={};
+	data.token=gettoken();
+	$.ajax({
+		url:"model/check.php",
+		type:"POST",
+		data:data,
+		success: function(result){
+			if (result=="false") {
+				document.location.href="index.html";
+			}
+		}
+	});
+	 // pub_client=mqtt.connect("ws://"+"140.119.163.195:10000");
 
-	html, body, div, applet, object, iframe,
-	h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-	a, abbr, acronym, address, big, cite, code,
-	del, dfn, em, img, ins, kbd, q, s, samp,
-	small, strike, strong, sub, sup, tt, var,
-	b, u, i, center,
-	dl, dt, dd, ol, ul, li,
-	fieldset, form, label, legend,
-	table, caption, tbody, tfoot, thead, tr, th, td,
-	article, aside, canvas, details, embed, 
-	figure, figcaption, footer, header, hgroup, 
-	menu, nav, output, ruby, section, summary,
-	time, mark, audio, video {
-		margin: 0;
-		padding: 0;
-		border: 0;
-		font-size: 100%;
-		font: inherit;
-		vertical-align: baseline;
-	}
-	/* HTML5 display-role reset for older browsers */
-	article, aside, details, figcaption, figure, 
-	footer, header, hgroup, menu, nav, section {
-		display: block;
-	}
-	body {
-		line-height: 1;
-	}
-	ol, ul {
-		list-style: none;
-	}
-	blockquote, q {
-		quotes: none;
-	}
-	blockquote:before, blockquote:after,
-	q:before, q:after {
-		content: '';
-		content: none;
-	}
-	table {
-		border-collapse: collapse;
-		border-spacing: 0;
-	}
-	#txt{
-		font-size: 340px;
-		text-align: center;
-	}
-	.Min,.P{
-		width: 150px;
-		height:180px;
-		text-align: center;
-		font-size:200px; 
-		color: red;
-		/*margin-top: -10px;*/
-	}
-	.Sec,.SET{
-		width: 230px;
-		height: 180px;
-		text-align: center;
-		font-size:200px; 
-		color: red;
-	}
-	.content{
-		float: left;
-		margin-left: 20%;
-	}
-	span{
-		/*width: 90px;*/
-		height: 120px;
-		font-size: 100px;
-		/*display: block;*/
-	}
-	button {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-}
-#start,.addMe{
-	background-color: #E7475E;
-}
-.but{
-	margin-left: 1%;
-}
-</style>
+</script>
 </head>
 <body onload="startTime()">
 	<div id="txt"></div>
@@ -128,7 +57,13 @@
 	let program=[];//record the train items
 	let length=0;
 	let keep;//record set
+	pub_client=mqtt.connect("ws://"+"140.119.163.195:10000");
 	function startTime() {
+		time={};
+		time.p=$(".P").val();
+		time.set=$(".SET").val();
+		time.txt="undefined";
+
 		let today = new Date();
 		let h = today.getHours();
 		let m = today.getMinutes();
@@ -165,16 +100,30 @@
 	   				start=0;
 	   				$(".SET").val(keep);
 	   			}else{
+	   				time.txt=checkTime(Min) + ":" + checkTime(Sec);
 	   				document.getElementById('txt').innerHTML = checkTime(Min) + ":" + checkTime(Sec);
+	   				// console.log(time.txt);
 	   			}
 	   			temp=s;
 	   		}
 	   	}else if(start==0){
+	   		time.txt=checkTime(m) + ":" + checkTime(s);
 			document.getElementById('txt').innerHTML =  checkTime(m) + ":" + checkTime(s);
+			// console.log(time.txt);
 	   	}else if(start>1){
-	   		document.getElementById('txt').innerHTML = checkTime(Min) + ":" + checkTime(Sec);
+	   		time.txt=checkTime(Min) + ":" + checkTime(Sec);
+	   		document.getElementById('txt').innerHTML = s(Min) + ":" + checkTime(Sec);
+	   		// console.log(time.txt);
 	   	}
-	    let t = setTimeout(startTime, 500);
+		// console.log(gettoken());
+		try{
+			
+			pub_client.publish(gettoken(),JSON.stringify(time),0);
+		}catch(e){
+			console.log("error="+e);
+		}
+		
+	    let t = setTimeout(startTime, 100);
 	}
 	function checkTime(i) {
 		if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10

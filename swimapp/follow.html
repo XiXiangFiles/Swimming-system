@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Nccu cs Wang test system</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="js/browserMqtt.js"></script>
+	<link rel="stylesheet" href="css/all.css">
+	<script>
+		function gettoken(){
+		let href=location.href;
+		let paremeter=href.split('?');
+		let token=paremeter[1].split("=");
+		return token[1];
+	}
+	let data={};
+	data.token=gettoken();
+	$.ajax({
+		url:"model/check.php",
+		type:"POST",
+		data:data,
+		success: function(result){
+			if (result=="false") {
+				document.location.href="index.html";
+			}
+		}
+	});
+		function _uuid() {
+	  		let d = Date.now();
+			if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+			    d += performance.now(); //use high-precision timer if available
+			 }
+	  		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+		    	let r = (d + Math.random() * 16) % 16 | 0;
+		    	d = Math.floor(d / 16);
+		      	return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+		 	});
+		}
+	</script>
+</head>
+<body>
+	<div id="txt"></div>
+	<div class="content">
+		<span class="sm">M</span><input type="text" class="Min" value="0">
+		<span class="ss">S</span><input type="text" class="Sec" value="0"><br>
+		<span>P</span><input type="text" class="P" value="0">
+		<span>SET</span><input type="text" class="SET" value="1"><br>
+	</div>
+	<script>
+		var client = mqtt.connect("ws://"+"140.119.163.195:10000");
+  		client.subscribe(gettoken());
+ 
+		client.on("message", function (topic, payload) {
+		    let time=JSON.parse(payload.toString());
+		    $(".P").val(time.p);
+		    $(".SET").val(time.p);
+		    if(time.txt!="undefined"){
+				document.getElementById('txt').innerHTML=time.txt;
+		    }
+		    
+		    // client.end()txt
+		 });
+
+	</script>
+</body>
+</html>
