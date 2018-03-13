@@ -86,3 +86,6 @@ html, body, div, applet, object, iframe,
 .but{
 	margin-left: 1%;
 }
+.clear{
+	clear: both;
+}

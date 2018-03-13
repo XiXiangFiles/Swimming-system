@@ -41,10 +41,13 @@
 <body>
 	<div id="txt"></div>
 	<div class="content">
-		<span class="sm">M</span><input type="text" class="Min" value="0">
-		<span class="ss">S</span><input type="text" class="Sec" value="0"><br>
+
 		<span>P</span><input type="text" class="P" value="0">
 		<span>SET</span><input type="text" class="SET" value="1"><br>
+	</div>
+	<div class="audio">
+		<audio src="mp3/long.mp3" class="alertLong"></audio>
+		<audio src="mp3/short.mp3" class="alertShort"></audio>
 	</div>
 	<script>
 		var client = mqtt.connect("ws://"+"140.119.163.195:10000");
@@ -52,13 +55,18 @@
  
 		client.on("message", function (topic, payload) {
 		    let time=JSON.parse(payload.toString());
+		    if(time.sound=="short"){
+				$(".alertShort").trigger('play');
+		    }
+		    if(time.sound=="long"){
+				$(".alertLong").trigger('play');
+		    }
 		    $(".P").val(time.p);
-		    $(".SET").val(time.p);
+		    $(".SET").val(time.set);
 		    if(time.txt!="undefined"){
 				document.getElementById('txt').innerHTML=time.txt;
 		    }
-		    
-		    // client.end()txt
+		    console.log(time);
 		 });
 
 	</script>

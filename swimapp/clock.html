@@ -37,8 +37,8 @@
 		<span class="ss">S</span><input type="text" class="Sec" value="0"><br>
 		<span>P</span><input type="text" class="P" value="0">
 		<span>SET</span><input type="text" class="SET" value="1"><br>
-		
 	</div>
+	<div class="clear"></div>
 	<div class="but">
 		<button class="addM">+M</button><button class="subM">-M</button>
 		<button class="addS">+S</button><button class="subS">-S</button>
@@ -46,6 +46,10 @@
 		<button class="addSET">+SET</button><button class="subSET">-SET</button>
 		<button id="start">start</button>
 		<button id="pause">pause</button>
+	</div>
+	<div class="audio">
+		<audio src="mp3/long.mp3" class="alertLong"></audio>
+		<audio src="mp3/short.mp3" class="alertShort"></audio>
 	</div>
 	<article id="show"></article>
 	<script type="text/javascript">
@@ -57,12 +61,14 @@
 	let program=[];//record the train items
 	let length=0;
 	let keep;//record set
+	let time={};
 	pub_client=mqtt.connect("ws://"+"140.119.163.195:10000");
 	function startTime() {
-		time={};
+		// time={};
 		time.p=$(".P").val();
 		time.set=$(".SET").val();
 		time.txt="undefined";
+		time.sound="undefined";
 
 		let today = new Date();
 		let h = today.getHours();
@@ -90,6 +96,8 @@
 						Min=parseInt(str[0]);
 						Sec=parseInt(str[1]);
 						length++;
+						$(".alertShort").trigger('play');
+						time.sound="short";
 	   				}	
 	   			}
 	   			if (length==program.length) {
@@ -97,8 +105,11 @@
 	   					length=0;
 	   			}
 	   			if(Sec==-1){
+	   				$(".alertLong").trigger('play');
+	   				time.sound="long";
 	   				start=0;
 	   				$(".SET").val(keep);
+	   				
 	   			}else{
 	   				time.txt=checkTime(Min) + ":" + checkTime(Sec);
 	   				document.getElementById('txt').innerHTML = checkTime(Min) + ":" + checkTime(Sec);
@@ -109,13 +120,10 @@
 	   	}else if(start==0){
 	   		time.txt=checkTime(m) + ":" + checkTime(s);
 			document.getElementById('txt').innerHTML =  checkTime(m) + ":" + checkTime(s);
-			// console.log(time.txt);
 	   	}else if(start>1){
 	   		time.txt=checkTime(Min) + ":" + checkTime(Sec);
 	   		document.getElementById('txt').innerHTML = s(Min) + ":" + checkTime(Sec);
-	   		// console.log(time.txt);
 	   	}
-		// console.log(gettoken());
 		try{
 			
 			pub_client.publish(gettoken(),JSON.stringify(time),0);
@@ -198,6 +206,11 @@
 		}
 	});
 	$("#start").off().on('click',function(){
+		let time={};
+		time.p=$(".P").val();
+		time.set=$(".SET").val();
+		time.txt="undefined";
+		time.sound="undefined";
 		if(program.length>0 && start==0){
 			let today = new Date();
 			temp=today.getSeconds();
@@ -210,8 +223,15 @@
 			$(".P").val(1);
 			length++;
 			$(".Min,.Sec,.sm,.ss").css({'display':'none'});
+			$(".alertShort").trigger('play');
+			time.sound="short";
+			console.log(time);
+			pub_client.publish(gettoken(),JSON.stringify(time),0);
 		}else if(start>1){
 			start=1;
+			$(".alertShort").trigger('play');
+			console.log(time);
+			pub_client.publish(gettoken(),JSON.stringify(time),0);
 		}	
 	});
 	$("#pause").off().on('click',function(){

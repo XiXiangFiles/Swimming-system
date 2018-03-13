@@ -8,14 +8,39 @@
 <body>
 	<span>帳號</span><input type="text" class="id"><br>
 	<span>密碼</span><input type="password" class="pwd"><br>
+	<span>永久登入</span><input type="checkbox" class="login_f">
 	<button class="submit">送出</button>
-
 	<script >
+		$.ajax({
+        	url:"model/f_login.php",
+        	type:'POST',
+        	async:false,
+        	data:{},
+        	success: function(result){
+        		console.log(result);
+        		let res=JSON.parse(result);
+        		let data={};
+				data.id=res.id;
+				data.pwd=res.pwd;
+        		$.ajax({url: "model/login.php",
+					type:'POST',
+					async:false,
+					data:data,
+				 	success: function(result){
+				 		if(result=='false'){
+	        				
+	        			}else{
+	        				document.location.href="home.html?token="+data.id;
+	        			}
+				 	}
+				});
+        	}
+        });
+
 		$(".submit").click(function () {
 			let data={};
 			data.id=$('.id').val();
 			data.pwd=$('.pwd').val();
-			// console.log(data);
 			$.ajax({url: "model/login.php",
 				type:'POST',
 				async:false,
@@ -27,6 +52,18 @@
         			if(result=='false'){
         				
         			}else{
+        				if($('.login_f').prop("checked")){
+        					$.ajax({
+        						url:"model/f_login.php",
+        						type:'POST',
+        						async:false,
+        						data:data,
+        						success: function(result){
+        							console.log(result);
+        						}
+        					});
+        				}
+        				// console.log(foever);
         				document.location.href="home.html?token="+token.U_mail;
         			}
     		}});
