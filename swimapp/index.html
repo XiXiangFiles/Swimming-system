@@ -1,3 +1,9 @@
+<!--
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
++-   Author : Wang Zi Xiang                   +- 
++-   Unit   : Nccu cs 						  +- 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- 
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,30 +16,34 @@
 	<span>密碼</span><input type="password" class="pwd"><br>
 	<span>永久登入</span><input type="checkbox" class="login_f">
 	<button class="submit">送出</button>
+	<button class="register">註冊</button>
 	<script >
 		$.ajax({
         	url:"model/f_login.php",
         	type:'POST',
         	async:false,
         	data:{},
-        	success: function(result){
-        		console.log(result);
-        		let res=JSON.parse(result);
-        		let data={};
-				data.id=res.id;
-				data.pwd=res.pwd;
-        		$.ajax({url: "model/login.php",
-					type:'POST',
-					async:false,
-					data:data,
-				 	success: function(result){
-				 		if(result=='false'){
-	        				
-	        			}else{
-	        				document.location.href="home.html?token="+data.id;
-	        			}
-				 	}
-				});
+        	success: function(result){    		
+        		if (result.trim()=='false') {
+        		}else{
+        			let res=JSON.parse(result);
+        			let data={};
+					data.id=res.id;
+					data.pwd=res.pwd;
+	        		$.ajax({url: "model/login.php",
+						type:'POST',
+						async:false,
+						data:data,
+					 	success: function(result){
+					 		if(result=='false'){
+		        				
+		        			}else{
+		        				document.location.href="home.html?token="+data.id;
+		        			}
+					 	}
+					});
+        		}
+        		
         	}
         });
 
@@ -46,7 +56,7 @@
 				async:false,
 				data:data,
 			 	success: function(result){
-			 		JSON.stringify(result)
+			 		JSON.stringify(result);
 			 		let token=JSON.parse(result);
 			 		// console.log(token.U_mail);
         			if(result=='false'){
@@ -67,6 +77,9 @@
         				document.location.href="home.html?token="+token.U_mail;
         			}
     		}});
+		});
+		$(".register").click(function () {
+			document.location.href="register.html";
 		});
 	</script>
 </body>

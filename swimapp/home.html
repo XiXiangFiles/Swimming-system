@@ -1,3 +1,9 @@
+<!--
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
++-   Author : Wang Zi Xiang                   +- 
++-   Unit   : Nccu cs 						  +- 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- 
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +21,8 @@
 			type:"POST",
 			data:data,
 			success: function(result){
-				if (result=="false") {
+				console.log(result);
+				if (result.trim()=="false") {
 					document.location.href="index.html";
 				}
 			}
@@ -25,7 +32,8 @@
 </head>
 <body>
 	<button class="clock">clock</button>
-	<button class="follow">follow</button>
+	<button class="follow">Subscribe</button>
+	<button class="logout">log out</button>
 </body>
 <script>
 	$('.clock').click(function(){
@@ -33,6 +41,16 @@
 	});
 	$('.follow').click(function(){
 		document.location.href="follow.html?token="+token[1];
+	});
+	$('.logout').click(function(){
+		$.ajax({
+			url:'model/logout.php',
+			async:false,
+			success: function(result){
+				console.log(result);
+				document.location.href="index.html";
+			}
+		});
 	});
 
 </script>

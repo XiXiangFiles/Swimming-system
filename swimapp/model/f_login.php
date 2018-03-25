@@ -1,6 +1,13 @@
-<?php 
-    $ID=$_POST["id"];
-    $PWD=$_POST['pwd'];
+
+<?php
+/*
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
++-   Author : Wang Zi Xiang                   +- 
++-   Unit   : Nccu cs                         +- 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-  
+*/ 
+    $ID=@$_POST['id'];
+    $PWD=@$_POST['pwd'];
     if ((isset($ID)==0 && isset($_COOKIE['f_login'])==0)  || (isset($PWD)==0 && isset($_COOKIE['f_login'])==0)) {
         echo "false";
     }else if(isset($_COOKIE['f_login'])){
