@@ -35,7 +35,8 @@
 						async:false,
 						data:data,
 					 	success: function(result){
-					 		if(result=='false'){
+					 		console.log("result="+result);
+					 		if(result.trim()=='false'){
 		        				
 		        			}else{
 		        				document.location.href="home.html?token="+data.id;
@@ -59,7 +60,7 @@
 			 		JSON.stringify(result);
 			 		let token=JSON.parse(result);
 			 		// console.log(token.U_mail);
-        			if(result=='false'){
+        			if(result.trim()=='false'){
         				
         			}else{
         				if($('.login_f').prop("checked")){
@@ -78,9 +79,18 @@
         			}
     		}});
 		});
-		$(".register").click(function () {
-			document.location.href="register.html";
-		});
+		$("#fileok").off().on('click',function(){
+            count_forli++;
+            let link=$("#pickfile").val();
+            $.ajax({
+                url:link,
+                method: 'GET',
+                cache: false,
+                success:function(data_o){
+
+                }
+            });
+        });
 	</script>
 </body>
 </html>

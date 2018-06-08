@@ -13,10 +13,16 @@
 	<script type="text/javascript" src="js/browserMqtt.js"></script>
 	<link rel="stylesheet" href="css/all.css">
 	<script>
-		function gettoken(){
-		let href=location.href;
-		let paremeter=href.split('?');
-		let token=paremeter[1].split("=");
+	function gettoken(){
+		let href,paremeter,token;
+		try{
+			href=location.href;
+			paremeter=href.split('?');
+			token=paremeter[1].split("=");
+		}catch(e){
+			document.location.href="index.html";
+		}
+		
 		return token[1];
 	}
 	let data={};

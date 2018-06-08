@@ -27,12 +27,13 @@ $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     // output data of each row
+    session_start();
+    $_SESSION['token']=$ID;
     while($row = $result->fetch_assoc()) {
         // $str='{U_mail:'.$row['U_mail'].',U_name:'.$row['U_name'].'}';
         $arr=array('U_mail' => $row['U_mail'], 'U_name' => $row['U_name']);
         echo json_encode($arr);
-		session_start();
-		$_SESSION['token']=$ID;
+		
     }
 } else {
     echo "false";

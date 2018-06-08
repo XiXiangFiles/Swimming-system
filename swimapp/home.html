@@ -9,31 +9,54 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Nccu cs Wang test system</title>
+	<link rel="stylesheet" href="css/all.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script>
-		let href=location.href;
-		let paremeter=href.split('?');
-		let token=paremeter[1].split("=");
-		let data={};
-		data.token=token[1];
-		$.ajax({
-			url:"model/check.php",
-			type:"POST",
-			data:data,
-			success: function(result){
-				console.log(result);
-				if (result.trim()=="false") {
-					document.location.href="index.html";
+		let href,paremeter,token,data;
+		try{
+			href=location.href;
+			paremeter=href.split('?');
+			token=paremeter[1].split("=");
+			data={};
+			data.token=token[1];
+			$.ajax({
+				url:"model/check.php",
+				type:"POST",
+				data:data,
+				success: function(result){
+					console.log(result);
+					if (result.trim()=="false") {
+						document.location.href="index.html";
+					}
 				}
-			}
-		});
+			});
+		}catch(e){
+			document.location.href="index.html";
+		}
+		
 	</script>
 </head>
 </head>
 <body>
-	<button class="clock">clock</button>
-	<button class="follow">Subscribe</button>
-	<button class="logout">log out</button>
+	
+	<div class="content">
+		<button class="clock">clock</button>
+		<button class="follow">Subscribe</button>
+		<button class="logout">log out</button>
+		<button class="setting_wrokshop">Set Workshop</button>
+		<button class="setting_group">Set group</button>
+		<div class="group">
+			<div class="group_name">
+				
+			</div>
+			<div class="increse_g">
+				<p>List Group name</p><br><input type="text" class="group_name"><br>
+				<p>list Group Info.</p><br><textarea name="group_info" id="" cols="30" rows="10"></textarea><br>
+						<button class="ins_btn">Increase group</button>
+
+			</div>
+		</div>
+	</div>
 </body>
 <script>
 	$('.clock').click(function(){
@@ -42,6 +65,7 @@
 	$('.follow').click(function(){
 		document.location.href="follow.html?token="+token[1];
 	});
+
 	$('.logout').click(function(){
 		$.ajax({
 			url:'model/logout.php',
@@ -52,6 +76,25 @@
 			}
 		});
 	});
+	$('.setting_group').click(function(){
+		$('.group').css({
+			"display":"block"	
+		});
+	});
+	$(".ins_btn").off().on('click',function(){
+			let obj={};
+			obj.token=token[1];
+			obj.group_name=$('.group_name').val();
+			obj.group_info=$('.group_info').val();
+            $.ajax({
+                url:"model/ins_grp.php",
+                method: 'GET',
+                cache: false,
+                success:function(data_o){
+
+                }
+            });
+    });
 
 </script>
 </html>

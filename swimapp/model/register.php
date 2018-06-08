@@ -6,7 +6,7 @@
 +-   Unit   : Nccu cs                         +- 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-  
 */
-@$ID=$_POST['id'];
+@$ID=$_POST["id"];
 @$PWD=$_POST['pwd'];
 @$user_name=$_POST['user_name'];
 @$user_info=$_POST['user_info'];

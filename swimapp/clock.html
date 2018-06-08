@@ -1,7 +1,7 @@
 <!--
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 +-   Author : Wang Zi Xiang                   +- 
-+-   Unit   : Nccu cs 	  		      +- 
++-   Unit   : Nccu cs 	  		              +- 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- 
 -->
 <!DOCTYPE html>
@@ -15,9 +15,15 @@
 	
 <script>
 	function gettoken(){
-		let href=location.href;
-		let paremeter=href.split('?');
-		let token=paremeter[1].split("=");
+		let href,paremeter,token;
+		try{
+			href=location.href;
+			paremeter=href.split('?');
+			token=paremeter[1].split("=");
+		}catch(e){
+			document.location.href="index.html";
+		}
+		
 		return token[1];
 	}
 	let data={};
@@ -128,7 +134,7 @@
 			document.getElementById('txt').innerHTML =  checkTime(m) + ":" + checkTime(s);
 	   	}else if(start>1){
 	   		time.txt=checkTime(Min) + ":" + checkTime(Sec);
-	   		document.getElementById('txt').innerHTML = s(Min) + ":" + checkTime(Sec);
+	   		document.getElementById('txt').innerHTML = checkTime(Min) + ":" + checkTime(Sec);
 	   	}
 		try{
 			
