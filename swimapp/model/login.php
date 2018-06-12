@@ -20,7 +20,9 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 } 
+// SELECT * FROM `Team` WHERE `U_num` = (SELECT `U_num` FROM `USER` WHERE `U_mail` = '123456')
 
+$sql = 'SELECT * FROM `USER` WHERE `U_mail` = "'.$ID.'" and `U_pwd` ="'.$PWD.'"';
 $sql = 'SELECT * FROM `USER` WHERE `U_mail` = "'.$ID.'" and `U_pwd` ="'.$PWD.'"';
 // echo "string";
 $result = $conn->query($sql);

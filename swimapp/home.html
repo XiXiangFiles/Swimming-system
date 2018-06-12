@@ -80,20 +80,25 @@
 		$('.group').css({
 			"display":"block"	
 		});
+		$.ajax({
+                url:"model/list_group.php?token="+token[1],
+                method: 'GET',
+                cache: false,
+                success:function(data_o){
+                	// data_o=JSON.stringify(data_o);
+                	let data=JSON.parse(data_o);
+                	for (let i =0 ; i<data.group.length; i++) {
+                		
+                	}
+                }
+        });
 	});
 	$(".ins_btn").off().on('click',function(){
 			let obj={};
 			obj.token=token[1];
 			obj.group_name=$('.group_name').val();
 			obj.group_info=$('.group_info').val();
-            $.ajax({
-                url:"model/ins_grp.php",
-                method: 'GET',
-                cache: false,
-                success:function(data_o){
 
-                }
-            });
     });
 
 </script>
