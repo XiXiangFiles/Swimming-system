@@ -11,6 +11,7 @@
 	<title>Nccu cs Wang test system</title>
 	<link rel="stylesheet" href="css/all.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="js/DomElements.js"></script>
 	<script>
 		let href,paremeter,token,data;
 		try{
@@ -46,12 +47,12 @@
 		<button class="setting_wrokshop">Set Workshop</button>
 		<button class="setting_group">Set group</button>
 		<div class="group">
-			<div class="group_name">
+			<div class="group_list">
 				
 			</div>
 			<div class="increse_g">
 				<p>List Group name</p><br><input type="text" class="group_name"><br>
-				<p>list Group Info.</p><br><textarea name="group_info" id="" cols="30" rows="10"></textarea><br>
+				<p>list Group Info.</p><br><textarea class="group_info" id="" cols="30" rows="10"></textarea><br>
 						<button class="ins_btn">Increase group</button>
 
 			</div>
@@ -59,6 +60,8 @@
 	</div>
 </body>
 <script>
+	let groupSet = new Set();
+	let countSettingGroup=0;
 	$('.clock').click(function(){
 		document.location.href="clock.html?token="+token[1];
 	});
@@ -77,18 +80,33 @@
 		});
 	});
 	$('.setting_group').click(function(){
-		$('.group').css({
-			"display":"block"	
-		});
+		let groupContent="";
+		countSettingGroup++;
+		if((countSettingGroup%2)==1){
+			$('.group').css({
+				"display":"block"	
+			});
+		}else{
+			$('.group').css({
+				"display":"none"	
+			});
+		}
 		$.ajax({
                 url:"model/list_group.php?token="+token[1],
                 method: 'GET',
                 cache: false,
                 success:function(data_o){
                 	// data_o=JSON.stringify(data_o);
-                	let data=JSON.parse(data_o);
-                	for (let i =0 ; i<data.group.length; i++) {
-                		
+                	if(data!=false){
+                		let data=JSON.parse(data_o);
+	                	for (let i =0 ; i<data.group.length; i++) {
+		                		if(groupSet.has(data.group[i].T_num)==false){
+		                		groupContent+=add_button("","groupList",data.group[i].T_name);
+		                		console.log("groupContent="+groupContent);
+		                		groupSet.add(data.group[i].T_num);
+	                		}	
+	                	}
+	                	$('.group_list').append(groupContent);
                 	}
                 }
         });
@@ -98,6 +116,16 @@
 			obj.token=token[1];
 			obj.group_name=$('.group_name').val();
 			obj.group_info=$('.group_info').val();
+			$.ajax({
+                url:"model/ins_grp.php",
+                method: 'GET',
+                data:obj,
+                cache: false,
+                success:function(data_o){
+                	console.log(data_o);
+                }
+        });
+
 
     });
 
