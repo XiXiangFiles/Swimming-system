@@ -1,5 +1,5 @@
-function add_button(Id,Class,Content){
-	let tag="<button "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\">"+Content+"</button>";
+function add_button(Id,Class,Content,onclick){
+	let tag="<button "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\"+ onclick=\""+onclick+"\">"+Content+"</button>";
 	return tag;
 }
 function add_select(Id,Class,Content){

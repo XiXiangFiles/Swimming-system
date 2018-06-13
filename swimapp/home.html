@@ -46,6 +46,7 @@
 		<button class="logout">log out</button>
 		<button class="setting_wrokshop">Set Workshop</button>
 		<button class="setting_group">Set group</button>
+		<button class="btn_joinGroup">Join group</button>
 		<div class="group">
 			<div class="group_list">
 				
@@ -53,13 +54,34 @@
 			<div class="increse_g">
 				<p>List Group name</p><br><input type="text" class="group_name"><br>
 				<p>list Group Info.</p><br><textarea class="group_info" id="" cols="30" rows="10"></textarea><br>
+				<p id="group_result"></p><br>
 						<button class="ins_btn">Increase group</button>
 
 			</div>
 		</div>
+		<div class="joinGroup"></div>
 	</div>
 </body>
 <script>
+	function reqJoin(token,T_num){
+		console.log("reqJoin= "+T_num);
+		let result = confirm("確定要申請加入群組？");
+		let obj={};
+		obj.token=token[1];
+		obj.T_num=T_num;
+		if(result==true){
+			$.ajax({
+				url:'model/reqJoin.php',
+                	method: 'GET',
+                	data:obj,
+                	cache: false,
+				success: function(result){
+					console.log(result);
+				}
+			});
+			alert("完成申請");
+		}
+	}
 	let groupSet = new Set();
 	let countSettingGroup=0;
 	$('.clock').click(function(){
@@ -101,9 +123,9 @@
                 		let data=JSON.parse(data_o);
 	                	for (let i =0 ; i<data.group.length; i++) {
 		                		if(groupSet.has(data.group[i].T_num)==false){
-		                		groupContent+=add_button("","groupList",data.group[i].T_name);
-		                		console.log("groupContent="+groupContent);
-		                		groupSet.add(data.group[i].T_num);
+			                		groupContent+=add_button("","groupList",data.group[i].T_name,"");
+			                		console.log("groupContent="+groupContent);
+			                		groupSet.add(data.group[i].T_num);
 	                		}	
 	                	}
 	                	$('.group_list').append(groupContent);
@@ -112,22 +134,54 @@
         });
 	});
 	$(".ins_btn").off().on('click',function(){
-			let obj={};
-			obj.token=token[1];
-			obj.group_name=$('.group_name').val();
-			obj.group_info=$('.group_info').val();
-			$.ajax({
-                url:"model/ins_grp.php",
-                method: 'GET',
-                data:obj,
-                cache: false,
-                success:function(data_o){
-                	console.log(data_o);
-                }
-        });
-
-
+			let result = confirm("確定要新增群組？");
+			let txt = "";
+			if(result == true){
+				let obj={};
+				obj.token=token[1];
+				obj.group_name=$('.group_name').val();
+				obj.group_info=$('.group_info').val();
+				$.ajax({
+                	url:"model/ins_grp.php",
+                	method: 'GET',
+                	data:obj,
+                	cache: false,
+                	success:function(data_o){
+                		console.log(data_o);
+                	}
+        		});
+        		txt = "確定新增";
+			}else{
+				txt = "取消新增";
+			}
+			// $(".group_result").val(txt);
+			document.getElementById("group_result").innerHTML = txt;
     });
-
+    $('.btn_joinGroup').click(function(){
+    	let groupContent="";
+    	let obj={};
+    	obj.token=token[1];
+    	obj.T_name="";
+    	$.ajax({
+                	url:"model/listAllgroup.php",
+                	method: 'GET',
+                	data:obj,
+                	cache: false,
+                	success:function(data_o){
+                		console.log("joinGroup"+data_o);
+                		if(data!=false){
+	                		let data=JSON.parse(data_o);
+		                	for (let i =0 ; i<data.group.length; i++) {
+			                		if(groupSet.has(data.group[i].T_num)==false){
+				                		groupContent+=add_button("","groupListofJoin",data.group[i].T_name,"reqJoin("+token[1]+","+data.group[i].T_num+")");
+				                		console.log("groupContent="+groupContent);
+				                		groupSet.add(data.group[i].T_num);
+		                		}	
+		                	}
+		                	$('.joinGroup').append(groupContent);
+                		}
+                	}
+        		});
+    });
 </script>
 </html>
