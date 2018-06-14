@@ -52,7 +52,7 @@ if (@$result->num_rows > 0) {
             // echo "]";
             // echo ',"size":'.$size*($resGL->num_rows+1)."}";
             // fwrite($myfile,"]");
-            fwrite($myfile,'],"size":'.$size*($resGL->num_rows+1));
+            fwrite($myfile,'],"size":'.$size*($resGL->num_rows+1).",\"T_num\":\"".$row['T_num'].'"');
             fwrite($myfile,"}");
             if($count!=1){
                 // echo ",";

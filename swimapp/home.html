@@ -47,7 +47,7 @@ line.link {
 				type:"POST",
 				data:data,
 				success: function(result){
-					console.log(result);
+					// console.log(result);
 					if (result.trim()=="false") {
 						document.location.href="index.html";
 					}
@@ -89,7 +89,7 @@ line.link {
 </body>
 <script>
 	function reqJoin(token,T_num){
-		console.log("reqJoin= "+T_num);
+		// console.log("reqJoin= "+T_num);
 		let result = confirm("確定要申請加入群組？");
 		let obj={};
 		obj.token=token;
@@ -101,14 +101,25 @@ line.link {
 				data:obj,
 				cache: false,
 				success: function(result){
-					console.log(result);
+					// console.log(result);
 				}
 			});
 			alert("完成申請");
 		}
 	}
 	function showReq(token,T_num) {
-		
+		let obj={};
+		obj.token=token;
+		obj.T_num=T_num;
+		$.ajax({
+				url:'model/reqDisplay.php',
+				method: 'GET',
+				data:obj,
+				cache: false,
+				success: function(result){
+					console.log("result+"+result);
+				}
+	});
 		
 		
 	}
@@ -126,7 +137,7 @@ line.link {
 			url:'model/logout.php',
 			async:false,
 			success: function(result){
-				console.log(result);
+				// console.log(result);
 				document.location.href="index.html";
 			}
 		});
@@ -151,6 +162,7 @@ line.link {
 			cache: false,
 			success:function(data_o){
                 	// data_o=JSON.stringify(data_o);
+                	let treeData;
                 	if(data!=false){
                 		$('svg').css({'display':'none'});
                 		let data=JSON.parse(data_o);
@@ -177,6 +189,8 @@ line.link {
                 			if (error) throw error;
 
                 			root = json;
+                			treeData=json;
+                			// console.log("~~~~"+JSON.stringify(json));
                 			update();
                 		});
 
@@ -234,6 +248,23 @@ line.link {
 
 // Toggle children on click.
 							function click(d) {
+								console.log("click="+JSON.stringify(treeData));
+								// console.log(tree.children.length);
+								let target=JSON.parse(JSON.stringify(d));
+								let tree=JSON.parse(JSON.stringify(treeData));
+								// console.log("eeee "+tree.children[0].name);
+
+								try{
+									for (let i =0; i<tree.children.length ; i++) {
+										if(tree.children[i].name == target.name){
+											// console.log("T_num= "+ tree.children[i].T_num);
+											showReq(token[1],tree.children[i].T_num);
+									}
+								}
+								}catch(e){
+
+								}
+								
 							  if (d3.event.defaultPrevented) return; // ignore drag
 							  if (d.children) {
 							  	d._children = d.children;
@@ -261,7 +292,7 @@ line.link {
 					for (let i =0 ; i<data.group.length; i++) {
 						if(groupSet.has(data.group[i].T_num)==false){
 							groupContent+=add_button("","groupList",data.group[i].T_name,"showReq("+token[1]+","+data.group[i].T_num+")");
-							console.log("groupContent="+groupContent);
+							// console.log("groupContent="+groupContent);
 							groupSet.add(data.group[i].T_num);
 						}	
 					}
@@ -293,7 +324,7 @@ line.link {
 							data:obj,
 							cache: false,
 							success: function(result){
-								console.log(result);
+								// console.log(result);
 							}
 						});
 					}else{
@@ -307,7 +338,7 @@ line.link {
 			txt = "取消新增";
 		}
 			// $(".group_result").val(txt);
-			// document.getElementById("group_result").innerHTML = txt;
+			document.getElementById("group_result").innerHTML = txt;
 			// location.reload();
 		});
 	var temp = '';
@@ -322,15 +353,15 @@ line.link {
 			data:obj,
 			cache: false,
 			success:function(data_o){
-				console.log("joinGroup"+data_o);
+				// console.log("joinGroup"+data_o);
 				if(data!=false){
 					temp = data_o;
 					let data=JSON.parse(data_o);
-					console.log("looooooooog:   " + data);
+					// console.log("looooooooog:   " + data);
 					for (let i =0 ; i<data.group.length; i++) {
 						if(groupSet.has(data.group[i].T_num)==false){
-							groupContent+=add_button("","groupListofJoin",data.group[i].T_name,"reqJoin("+token[1]+","+data.group[i].T_num+")");
-							console.log("groupContent="+groupContent);
+							groupContent+=add_button("","groupListofJoin",data.group[i].T_name,"reqJoin('"+token[1]+"',"+data.group[i].T_num+")");
+							// console.log("groupContent="+groupContent);
 							groupSet.add(data.group[i].T_num);
 						}	
 					}
