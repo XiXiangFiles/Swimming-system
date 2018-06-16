@@ -26,4 +26,5 @@
 	}else{
 		echo "false";
 	}
+	$conn->close();
  ?>

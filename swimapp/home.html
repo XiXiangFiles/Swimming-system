@@ -6,28 +6,8 @@
 -->
 <!DOCTYPE html>
 <html lang="en">
-<style>
-
-.node circle {
-	cursor: pointer;
-	stroke: #3182bd;
-	stroke-width: 1.5px;
-}
-
-.node text {
-	font: 10px sans-serif;
-	pointer-events: none;
-	text-anchor: middle;
-}
-
-line.link {
-	fill: none;
-	stroke: #9ecae1;
-	stroke-width: 1.5px;
-}
-
-</style>
 <head>
+	
 	<meta charset="UTF-8">
 	<title>Nccu cs Wang test system</title>
 	<link rel="stylesheet" href="css/all.css">
@@ -36,6 +16,11 @@ line.link {
 	<script src="js/DomElements.js"></script>
 	<script>
 		let href,paremeter,token,data;
+		let groupSet = new Set();
+		let countSettingGroup=0;
+		let ReqJoinSet=new Set();
+		let ReqCancelSet=new Set();
+		let ReqT_num;
 		try{
 			href=location.href;
 			paremeter=href.split('?');
@@ -82,9 +67,13 @@ line.link {
 			</div>
 		</div>
 		<div class="joinGroup"></div>
-		<div class="picGroup">
-			
+		<div class="picGroup"></div>
+		<div class="adjustGroup">
+			<ul id="unconfirm" class="unconfirm"></ul>
+			<ul id="alreadyC" class="alreadyC"></ul><br>
+			<button class="sentReq">Send Request</button>
 		</div>
+		
 	</div>
 </body>
 <script>
@@ -107,6 +96,15 @@ line.link {
 			alert("完成申請");
 		}
 	}
+	function proposeReq(T_num,U_num){
+		ReqJoinSet.add(U_num);
+		ReqT_num=T_num;
+	}
+	function proposeDonereq(T_num,U_num){
+		ReqCancelSet.add(U_num);
+		// console.log("proposeDonereq"+U_num);
+		ReqT_num=T_num;
+	}
 	function showReq(token,T_num) {
 		let obj={};
 		obj.token=token;
@@ -118,13 +116,31 @@ line.link {
 				cache: false,
 				success: function(result){
 					console.log("result+"+result);
+					let data=JSON.parse(result);
+					let strReq="";
+					let ReqDone="";
+					if(result!=false){
+						// $('.unconfirm').val("");
+						// $('.alreadyC').val("");  
+						document.getElementById("unconfirm").innerHTML = " ";
+						document.getElementById("alreadyC").innerHTML = " ";
+
+						for (let i = 0; i < data.Req.length; i++) {
+							strReq+=add_button(" ","Reqbtn",data.Req[i].U_name,"proposeReq("+T_num+","+data.Req[i].U_num+")")+"<br>";
+							// console.log(strReq);
+						}
+						for ( i = 0; i < data.ReqDone.length; i++) {
+							ReqDone+=add_button(" ","ReqDonebtn",data.ReqDone[i].U_name,"proposeDonereq("+T_num+","+data.ReqDone[i].U_num+")" )+"<br>";
+
+						}
+							$('#unconfirm').append(strReq);
+							$('#alreadyC').append(ReqDone);
+					}
 				}
 	});
 		
 		
 	}
-	let groupSet = new Set();
-	let countSettingGroup=0;
 	$('.clock').click(function(){
 		document.location.href="clock.html?token="+token[1];
 	});
@@ -142,6 +158,7 @@ line.link {
 			}
 		});
 	});
+
 	$('.setting_group').click(function(){
 		let groupContent="";
 		countSettingGroup++;
@@ -190,7 +207,7 @@ line.link {
 
                 			root = json;
                 			treeData=json;
-                			// console.log("~~~~"+JSON.stringify(json));
+                			console.log("~~~~"+JSON.stringify(json));
                 			update();
                 		});
 
@@ -371,7 +388,38 @@ line.link {
 		});
 	});
 
-	
+	$('.sentReq').off().on('click',function(){
+		console.log("work");
+		console.log(ReqCancelSet);
+		if(ReqJoinSet.size >0 || ReqCancelSet.size >0){
+			let obj={};
+			obj.T_num=ReqT_num;
 
+			if(ReqJoinSet.size==1)
+				obj.reqJoin=ReqJoinSet.values().next().value
+			else
+				obj.reqJoin=Array.from(ReqJoinSet);
+
+
+			if(ReqCancelSet.size==1)
+				obj.ReqCancelSet=ReqCancelSet.values().next().value
+			else
+				obj.ReqCancelSet=Array.from(ReqCancelSet);
+
+
+
+			console.log("obj= "+JSON.stringify(obj));
+			$.ajax({
+				url:"model/adjustMember.php",
+				method:"GET",
+				data:obj,
+				cache: false,
+				success:function(result){
+					console.log("res= "+result);
+				}
+			});
+		}
+
+	});
 </script>
 </html>

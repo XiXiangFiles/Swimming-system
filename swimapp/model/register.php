@@ -55,7 +55,7 @@ if(!empty($ID)){
 		 }
 	}
 }
-
+$conn->close();
 
 
 

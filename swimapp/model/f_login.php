@@ -18,5 +18,6 @@
         setcookie("f_login",$data,time()+2592000);
         
     }
+    $conn->close();
     
 ?>

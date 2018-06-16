@@ -25,6 +25,7 @@ html, body, div, applet, object, iframe,
 	}
 	body {
 		line-height: 1;
+		float: left;
 	}
 	ol, ul {
 		list-style: none;
@@ -41,6 +42,7 @@ html, body, div, applet, object, iframe,
 		border-collapse: collapse;
 		border-spacing: 0;
 	}
+
 	#txt{
 		font-size: 340px;
 		text-align: center;
@@ -62,6 +64,7 @@ html, body, div, applet, object, iframe,
 	}
 	.content{
 		float: left;
+		
 		margin-left: 20%;
 	}
 	span{
@@ -80,6 +83,24 @@ html, body, div, applet, object, iframe,
     display: inline-block;
     font-size: 16px;
 }
+
+	.node circle {
+	cursor: pointer;
+	stroke: #3182bd;
+	stroke-width: 1.5px;
+	}
+
+	.node text {
+		font: 10px sans-serif;
+		pointer-events: none;
+		text-anchor: middle;
+	}
+
+	line.link {
+		fill: none;
+		stroke: #9ecae1;
+		stroke-width: 1.5px;
+	}
 #start,.addMe{
 	background-color: #E7475E;
 }
@@ -92,6 +113,42 @@ html, body, div, applet, object, iframe,
 .group{
 	display: none;
 }
+.adjustGroup{
+	width: 800px;
+	display: flex;
+}
+.unconfirm{
+	width: 40%;
+	border: solid 1px black;
+}
+.alreadyC{
+	width: 40%;
+	border: solid 1px black;
+}
+.Reqbtn{
+	background-color: #dddfe6;
+    border: none;
+    color: black;
+    padding: 8px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 3% 0% 0% 5%;
+}
+
+.ReqDonebtn{
+	background-color: #252c41;
+    border: none;
+    color: white;
+    padding: 8px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 3% 0% 0% 5%;
+}
+
 @media(max-width:600px){
 	.content{
 		margin-left: 0%;

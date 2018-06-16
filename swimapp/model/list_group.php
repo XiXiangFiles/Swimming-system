@@ -43,6 +43,7 @@ if (@$result->num_rows > 0) {
         $sqlGrouplist='SELECT * FROM `USER` WHERE `U_num` IN (SELECT `U_num` FROM `Group_List` WHERE`T_num` ='.$row['T_num'].' and `GL_Permission` != "admin:-1" )';
 
         $resGL = $conn->query($sqlGrouplist);
+        $sizeRoot+=$resGL->num_rows;
         $count2=@$resGL->num_rows;
         while($row2 = $resGL->fetch_assoc()){
             $arr3=array("name" =>$row2['U_mail'],"size"=>3398);
@@ -52,22 +53,25 @@ if (@$result->num_rows > 0) {
             // echo "]";
             // echo ',"size":'.$size*($resGL->num_rows+1)."}";
             // fwrite($myfile,"]");
-            fwrite($myfile,'],"size":'.$size*($resGL->num_rows+1).",\"T_num\":\"".$row['T_num'].'"');
-            fwrite($myfile,"}");
-            if($count!=1){
+            
+            if($count2!=1){
                 // echo ",";
                 fwrite($myfile,",");
             }else{
                 // echo "";
                 fwrite($myfile," ");
+                fwrite($myfile,'],"size":'.$size*($resGL->num_rows+1).",\"T_num\":\"".$row['T_num'].'"');
+                fwrite($myfile,"}");
             }
-            // $count2--;
+            $count2--;
         }
-        $count--;
+        if($count-- !=1)
+            fwrite($myfile,",");
+
         
     }
     echo "]}";
-    fwrite($myfile, "],\"size\":".($sizeRoot*3398)."}");
+    fwrite($myfile, "],\"size\":".($sizeRoot*4000)."}");
 } else {
     echo "false";
 }

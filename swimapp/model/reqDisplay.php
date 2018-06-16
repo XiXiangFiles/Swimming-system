@@ -27,7 +27,7 @@ if(@$resGL->num_rows==0){
 
 }else{
 	$arrNoReq;
-	echo "{ ReqDone:[";
+	echo "{ \"ReqDone\":[";
 	$resALLGL=$conn->query($sqlGrouplist);
 	$count=$resALLGL->num_rows;
 
@@ -39,7 +39,7 @@ if(@$resGL->num_rows==0){
 			}
 
 	}
-	echo "],Req:[";
+	echo "],\"Req\":[";
 
 	$count=$resGL->num_rows;
 	while($row2= $resGL->fetch_assoc()){
@@ -54,5 +54,6 @@ if(@$resGL->num_rows==0){
 
 	echo "]}";
 }
+$conn->close();
 
 ?>

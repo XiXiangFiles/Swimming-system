@@ -62,5 +62,6 @@ if(isset($token)){
 }else{
 	echo "false";
 }
+$conn->close();
 
 ?>
