@@ -21,6 +21,7 @@
 		let ReqJoinSet=new Set();
 		let ReqCancelSet=new Set();
 		let ReqT_num;
+		let workshopTime=[];
 		try{
 			href=location.href;
 			paremeter=href.split('?');
@@ -51,9 +52,10 @@
 		<button class="clock">clock</button>
 		<button class="follow">Subscribe</button>
 		<button class="logout">log out</button>
-		<button class="setting_wrokshop">Set Workshop</button>
+		<!-- <button class="setting_wrokshop">Set Workshop</button> -->
 		<button class="setting_group">Set group</button>
 		<button class="btn_joinGroup">Join group</button>
+		<div class="clear"></div>
 		<div class="group">
 			<div class="group_list">
 				
@@ -69,11 +71,27 @@
 		<div class="joinGroup"></div>
 		<div class="picGroup"></div>
 		<div class="adjustGroup">
-			<ul id="unconfirm" class="unconfirm"></ul>
+			<ul id="unconfirm" class="unconfirm"></ul><br>
 			<ul id="alreadyC" class="alreadyC"></ul><br>
-			<button class="sentReq">Send Request</button>
 		</div>
-		
+		<div>
+				<button class="sentReq">Save</button><br>
+				<button class="sentReq">Cancel </button><br>
+		</div>
+		<div class="workshop">
+			<select name="" id="listGroup"></select>
+			<p>Workshop Name</p><input type="text" class="workshopInfo">
+			<p>日期</p><input type="date" class="setDate">
+			<p>Min</p><input type="text" class="setMin" value="0">
+			<p>Sec</p><input type="text" class="setSec" value="0">
+			<p id= "programNum">P0</p>
+			<p>Set</p><input type="text" class="setSet" value="1"><br>
+			<textarea class="itemInfo" id="" cols="30" rows="10"></textarea>
+			<button class="saveWorkshop">Save</button>
+			<button class="clearWorkshop">Clear</button>
+			<button class="sendWorkshop">Send Request</button>
+					
+		</div>
 	</div>
 </body>
 <script>
@@ -172,6 +190,7 @@
 			$('.group').css({
 				"display":"none"	
 			});
+		
 		}
 		$.ajax({
 			url:"model/list_group.php?token="+token[1],
@@ -313,6 +332,12 @@
 							groupSet.add(data.group[i].T_num);
 						}	
 					}
+					let str="";
+					for(let i=0; i<data.group.length ; i++){
+						str+=add_option(data.group[i].T_num,data.group[i].T_name);	
+					}
+					console.log(str);
+					document.getElementById('listGroup').innerHTML=str;
 					$('.group_list').append(groupContent);
 				}
 			}
@@ -358,7 +383,7 @@
 			document.getElementById("group_result").innerHTML = txt;
 			// location.reload();
 		});
-	var temp = '';
+	let temp = '';
 	$('.btn_joinGroup').click(function(){
 		let groupContent="";
 		let obj={};
@@ -416,6 +441,77 @@
 				cache: false,
 				success:function(result){
 					console.log("res= "+result);
+				}
+			});
+		}
+
+	});
+	$('.saveWorkshop').off().on('click',function(){
+		let workshopInfo=$('.workshopInfo').val();
+		let Min= parseInt($('.setMin').val());
+		let Sec=parseInt($('.setSec').val());
+		let WorkshopSet= parseInt( $('.setSet').val());
+		
+		if(!isNaN(Min) && !isNaN(Sec) && !isNaN(WorkshopSet)){
+			
+			if(Min==0 && Sec==0){
+				alert("Please input workshop time.");
+			}else{
+				workshopTime.push(Min+":"+Sec);
+				// $('.setSet').val(++WorkshopSet);
+				$('.setMin').val(0);
+				$('.setSec').val(0);
+				$('.setMin').css({'background' : 'white'});
+				$('.setSec').css({'background' : 'white'});
+				$('.setSet').css({'background' : 'white'});
+				$('.workshopInfo').css({'background' : 'white'});
+				
+				document.getElementById('programNum').innerHTML="P"+workshopTime.length;
+			}
+		}
+		if(workshopInfo==""){
+			$('.workshopInfo').css({'background' : 'red'});
+		}
+		if(isNaN(Min)){
+			$('.setMin').css({'background' : 'red'});
+		}
+		if(isNaN(Sec)){
+			$('.setSec').css({'background' : 'red'});
+		}
+		if(isNaN(WorkshopSet)){
+			$('.setSet').css({'background' : 'red'});
+		}
+	});
+	$('.clearWorkshop').click(function(){
+		workshopTime=[];
+		$('.setDate').val("");
+		$('.workshopInfo').val("");
+		$('.setMin').val(0);
+		$('.setSec').val(0);
+		$('.setSet').val(1);
+	})
+	$('.sendWorkshop').off().on('click',function(){
+		let workshopDate=$('.setDate').val();
+		if(workshopDate=="")
+			alert("Please select Date.");
+		else{
+			let obj={};
+			obj.token=token[1];
+			obj.T_num=$('#listGroup').val();
+			obj.workshopInfo=$('.workshopInfo').val();
+			obj.workshopDate=workshopDate;
+			obj.workshopTime=workshopTime;
+			obj.set=$('.setSet').val();
+			obj.itemInfo=$('.itemInfo').val();
+			
+			console.log("JSON.stringify= "+JSON.stringify(obj));
+			$.ajax({
+				url:"model/saveWorkshop.php",
+				method:"POST",
+				cache:false,
+				data:obj,
+				success:function(result){
+					console.log("saveWorkshop= "+result);
 				}
 			});
 		}
