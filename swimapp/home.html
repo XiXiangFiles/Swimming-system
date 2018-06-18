@@ -76,13 +76,16 @@
 		    margin-left: 80%;
     		border: solid red;
 	}
-	.saveWorkshop ,.clearWorkshop, .sendWorkshop{
-		margin-left: 7%;
+	.saveWorkshop ,.clearWorkshop{
+		margin-left: 37%;
     	margin-bottom: 5%;
     	background-color: black;
 	}
 	svg{
 		    margin-left: 24%;
+	}
+	.group{
+		display: none;
 	}
 	</style>
 </head>
@@ -203,7 +206,7 @@
 	              </div>
 	              <div class="col-md-6 mb-3">
 		                <label for="lastName">Sec</label>
-		                <span id= "programNum">P0</span>
+		                <span id= "programNum">P1</span>
 		                <input type="text" class="form-control setSec" id="lastName" placeholder="" value="0" required>
 		                <div class="invalid-feedback">
 		                  the Sec is required.
@@ -213,7 +216,7 @@
 				<div class="mb-3">
 	              <label for="username">Input Set</label>
 	              <div class="input-group">
-	                <input type="text" class="form-control group_info" id="username" value="1" placeholder="" required>
+	                <input type="text" class="form-control setSet" id="username" value="1" placeholder="" required>
 	                <div class="invalid-feedback" style="width: 100%;">
 	                  The Set is required.
 	                </div>
@@ -233,7 +236,7 @@
 	            <hr class="mb-4">
 	            <button class="btn btn-primary btn-lg saveWorkshop">Save</button>
 				<button class="btn btn-primary btn-lg clearWorkshop">Clear</button>
-				<button class="btn btn-primary btn-lg sendWorkshop">Send Request</button>
+				<!-- <button class="btn btn-primary btn-lg sendWorkshop">Send Request</button> -->
 	            <button class="btn btn-primary btn-lg btn-block sendWorkshop">Creat a New Workshop</button>
 	          </div>
 	        </div>
@@ -262,19 +265,7 @@
 				<button class="sentReq">Save</button><br>
 				<button class="sentReq">Cancel </button><br>
 		</div>
-		<!-- <div class="workshop">
-			<select name="" id="listGroup"></select>
-			<p>Workshop Name</p><input type="text" class="workshopInfo">
-			<p>日期</p><input type="date" class="setDate">
-			<p>Min</p><input type="text" class="setMin" value="0">
-			<p>Sec</p><input type="text" class="setSec" value="0">
-			<p id= "programNum">P0</p>
-			<p>Set</p><input type="text" class="setSet" value="1"><br>
-			<textarea class="itemInfo" id="" cols="30" rows="10"></textarea>
-			<button class="saveWorkshop">Save</button>
-			<button class="clearWorkshop">Clear</button>
-			<button class="sendWorkshop">Send Request</button>
-		</div> -->
+
 	</div>
 </body>
 <script>
@@ -366,12 +357,12 @@
 		if((countSettingGroup%2)==1){
 			$('.picGroup').css({'display':'block'});
 			$('.group').css({
-				"display":"block"	
+				'display':'block'	
 			});
 		}else{
 			$('.picGroup').css({'display':'none'});
 			$('.group').css({
-				"display":"none"	
+				'display':'none'	
 			});
 		
 		}
@@ -630,13 +621,16 @@
 
 	});
 	$('.saveWorkshop').off().on('click',function(){
+		console.log("-----");
 		let workshopInfo=$('.workshopInfo').val();
 		let Min= parseInt($('.setMin').val());
 		let Sec=parseInt($('.setSec').val());
 		let WorkshopSet= parseInt( $('.setSet').val());
-		
+		console.log("isNaN(Min)= "+isNaN(Min)+" "+ Min);
+		console.log("isNaN(Sec)= "+isNaN(Sec)+" "+ Sec);
+		console.log("isNaN(WorkshopSet)= "+isNaN(WorkshopSet) +" "+ WorkshopSet);
 		if(!isNaN(Min) && !isNaN(Sec) && !isNaN(WorkshopSet)){
-			
+			console.log("-----2");
 			if(Min==0 && Sec==0){
 				alert("Please input workshop time.");
 			}else{

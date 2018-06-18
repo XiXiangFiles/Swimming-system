@@ -45,7 +45,7 @@
 				$time=$workshopTime;
 			}
 			$P_num=$row['P_num'];
-			$sqlInsertItem="INSERT INTO `ProgramList`(`P_num`, `Time`, `PL_detail`) VALUES ($P_num,'$time','$itemInfo')";
+			$sqlInsertItem="INSERT INTO `ProgramList`(`P_num`, `Time`,`PL_set`,`PL_detail`) VALUES ($P_num,'$time','$set','$itemInfo')";
 			$conn->query($sqlInsertItem);
 			echo "true";
 
