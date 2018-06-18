@@ -18,6 +18,8 @@
 	<link href="css/sticky-footer-navbar.css" rel="stylesheet">
 	<script src="assets/js/vendor/popper.min.js"></script>
     <script src="dist/js/bootstrap.min.js"></script>
+    <script src="assets/js/vendor/holder.min.js"></script>
+	<link href="css/form-validation.css" rel="stylesheet">
 	<script>
 		let href,paremeter,token,data;
 		let groupSet = new Set();
@@ -70,6 +72,18 @@
 		background-color: #343a40;
 		border: #343a40;
 	}
+	#programNum{
+		    margin-left: 80%;
+    		border: solid red;
+	}
+	.saveWorkshop ,.clearWorkshop, .sendWorkshop{
+		margin-left: 7%;
+    	margin-bottom: 5%;
+    	background-color: black;
+	}
+	svg{
+		    margin-left: 24%;
+	}
 	</style>
 </head>
 </head>
@@ -109,33 +123,137 @@
       </nav>
     </header>
 
+	<div class="container">
+		<div class="picGroup"></div>
+		<div class="group">
+			<div class="row">
+	        <div class="col-md-8 order-md-1 registerForm">
+	          <h4 class="mb-3">Creat New Group</h4>
+	          <div class="needs-validation" novalidate>
+
+				<div class="mb-3">
+	              <label for="username">Input New Group Name</label>
+	              <div class="input-group">
+	                <input type="text" class="form-control group_name" id="username" placeholder="" required>
+	                <div class="invalid-feedback" style="width: 100%;">
+	                  New Group Name is required.
+	                </div>
+	              </div>
+	            </div>
+	            <div class="mb-3">
+	              <label for="username">Input New Group Infomation</label>
+	              <div class="input-group">
+	                <input type="text" class="form-control group_info" id="username" placeholder="" required>
+	                <div class="invalid-feedback" style="width: 100%;">
+	                  New Group Infomation is required.
+	                </div>
+	              </div>
+	            </div>
+	            <hr class="mb-4">
+	            <button class="btn btn-primary btn-lg btn-block ins_btn">Creat New Group</button>
+	          </div>
+	        </div>
+	      </div>
+
+		<div class="row">
+	        <div class="col-md-8 order-md-1 registerForm">
+	        <br><br>
+
+	          <h4 class="mb-3">Creat New Workshop</h4>
+	          <div class="needs-validation" novalidate>
+
+				<div class="mb-3">
+	              <label for="username">Choose Your Group</label>
+	              <div class="input-group">
+	              	<select name="" id="listGroup" class="form-control group_name "></select>
+	                <!-- <input type="text" class="form-control group_name" id="username" placeholder="" required> -->
+	                <div class="invalid-feedback" style="width: 100%;">
+	                  New Group Name is required.
+	                </div>
+	              </div>
+	            </div>
+
+				<div class="mb-3">
+	              <label for="username">Input New Workshop Name</label>
+	              <div class="input-group">
+	                <input type="text" class="form-control workshopInfo" id="username" placeholder="" required>
+	                <div class="invalid-feedback" style="width: 100%;">
+	                  New Group Name is required.
+	                </div>
+	              </div>
+	            </div>
+	            <div class="mb-3">
+	              <label for="username">Input New Workshop Date</label>
+	              <div class="input-group">
+	                <input type="Date" class="form-control setDate" id="username" placeholder="" required>
+	                <div class="invalid-feedback" style="width: 100%;">
+	                  New Group Infomation is required.
+	                </div>
+	              </div>
+	            </div>
+				
+				<div class="row">
+	                  
+					<div class="col-md-6 mb-3">
+		                <label for="firstName">Min</label>
+		                <input type="text" class="form-control setMin" id="firstName" placeholder="" value="0" required>
+		                <div class="invalid-feedback">
+		                  the Min is required.
+		                </div>
+	              </div>
+	              <div class="col-md-6 mb-3">
+		                <label for="lastName">Sec</label>
+		                <span id= "programNum">P0</span>
+		                <input type="text" class="form-control setSec" id="lastName" placeholder="" value="0" required>
+		                <div class="invalid-feedback">
+		                  the Sec is required.
+		                </div>
+	              </div>
+				</div>
+				<div class="mb-3">
+	              <label for="username">Input Set</label>
+	              <div class="input-group">
+	                <input type="text" class="form-control group_info" id="username" value="1" placeholder="" required>
+	                <div class="invalid-feedback" style="width: 100%;">
+	                  The Set is required.
+	                </div>
+	              </div>
+	            </div>
+
+				<div class="mb-3">
+	              <label for="username">Input the Item Infomation</label>
+	              <div class="input-group">
+	                <textarea class="form-control itemInfo" id="" cols="30" rows="5"></textarea>
+	                <div class="invalid-feedback" style="width: 100%;">
+	                  The Item Infomation is required.
+	                </div>
+	              </div>
+	            </div>
+
+	            <hr class="mb-4">
+	            <button class="btn btn-primary btn-lg saveWorkshop">Save</button>
+				<button class="btn btn-primary btn-lg clearWorkshop">Clear</button>
+				<button class="btn btn-primary btn-lg sendWorkshop">Send Request</button>
+	            <button class="btn btn-primary btn-lg btn-block sendWorkshop">Creat a New Workshop</button>
+	          </div>
+	        </div>
+	    </div>
+
+	</div>
+
+</div>
 
 	
 
 	<footer class="footer">
-      <div class="container">
         <span class="text-muted">Place sticky footer content here.</span>
-      </div>
     </footer>
 
 	
 	<div class="content">
 
-		<div class="clear"></div>
-		<div class="group">
-			<div class="group_list">
-				
-			</div>
-			<div class="increse_g">
-				<p>List Group name</p><br><input type="text" class="group_name"><br>
-				<p>list Group Info.</p><br><textarea class="group_info" id="" cols="30" rows="10"></textarea><br>
-				<font color="orange"><p id="group_result"></p><br></font>
-				<button class="ins_btn">Increase group</button>
-
-			</div>
-		</div>
 		<div class="joinGroup"></div>
-		<div class="picGroup"></div>
+		
 		<div class="adjustGroup">
 			<ul id="unconfirm" class="unconfirm"></ul><br>
 			<ul id="alreadyC" class="alreadyC"></ul><br>
@@ -144,7 +262,7 @@
 				<button class="sentReq">Save</button><br>
 				<button class="sentReq">Cancel </button><br>
 		</div>
-		<div class="workshop">
+		<!-- <div class="workshop">
 			<select name="" id="listGroup"></select>
 			<p>Workshop Name</p><input type="text" class="workshopInfo">
 			<p>日期</p><input type="date" class="setDate">
@@ -156,8 +274,7 @@
 			<button class="saveWorkshop">Save</button>
 			<button class="clearWorkshop">Clear</button>
 			<button class="sendWorkshop">Send Request</button>
-					
-		</div>
+		</div> -->
 	</div>
 </body>
 <script>
@@ -269,8 +386,8 @@
                 		$('svg').css({'display':'none'});
                 		let data=JSON.parse(data_o);
 
-                		var width = 960,
-                		height = 500,
+                		var width = 480,
+                		height = 250,
                 		root;
 
                 		var force = d3.layout.force()
