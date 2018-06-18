@@ -10,13 +10,29 @@
 	<meta charset="UTF-8">
 	<title>Nccu cs WangWang test system</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/signin.css" rel="stylesheet">
+
 </head>
-<body>
-	<span>帳號</span><input type="text" class="id"><br>
-	<span>密碼</span><input type="password" class="pwd"><br>
-	<span>永久登入</span><input type="checkbox" class="login_f">
-	<button class="submit">送出</button>
-	<button class="register">註冊</button>
+<body class="text-center">
+    <div class="form-signin">
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      <label for="inputEmail" class="sr-only ">Email address</label>
+      <input type="email" id="inputEmail" class="form-control id" placeholder="Email address" required autofocus>
+      <label for="inputPassword" class="sr-only ">Password</label>
+      <input type="password" id="inputPassword" class="form-control pwd" placeholder="Password" required>
+      <div class="checkbox mb-3">
+        <label>
+          <input type="checkbox" value="remember-me"  class="login_f"> Remember me
+        </label>
+      </div>
+      <button class="submit btn btn-lg btn-primary btn-block submit" >Sign in</button>
+      <button class="register btn btn-lg btn-primary btn-block register">Register</button>
+      <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+    </div>
+ 
+
+
 	<script >
 		$.ajax({
         	url:"model/f_login.php",
@@ -90,6 +106,9 @@
 
                 }
             });
+        });
+        $('.register').click(function(){
+            document.location.href="register.html";
         });
 	</script>
 </body>
