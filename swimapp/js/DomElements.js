@@ -30,7 +30,32 @@ function add_tr(Id,Class,Content){
 	let tag="<tr "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\">"+Content+"</tr>";
 	return tag;
 }
-function add_td(Id,Class,Content){
-	let tag="<td "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\">"+Content+"</td>";
+function add_td(Id,Class,rowspan,Content){
+	let tag;
+	if (rowspan==undefined)
+		tag="<td "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\" rowspan=\""+rowspan+"\">"+Content+"</td>";
+	else
+		tag="<td "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\">"+Content+"</td>";
+	
+	return tag;
+}
+function add_h4(Id,Class,Content){
+	let tag="<h4 "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\">"+Content+"</h4>";
+	return tag;
+}
+function add_table(Id,Class,Content){
+	let tag="<table "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\">"+Content+"</table>";
+	return tag;
+}
+function add_thead(Id,Class,Content){
+	let tag="<thead "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\">"+Content+"</thead>";
+	return tag;
+}
+function add_tbody(Id,Class,Content){
+	let tag="<tbody "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\">"+Content+"</tbody>";
+	return tag;
+}
+function add_th(Id,Class,Content){
+	let tag="<th "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\">"+Content+"</th>";
 	return tag;
 }
