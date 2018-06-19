@@ -20,6 +20,7 @@
     <script src="dist/js/bootstrap.min.js"></script>
     <script src="assets/js/vendor/holder.min.js"></script>
 	<link href="css/form-validation.css" rel="stylesheet">
+	<!-- <link href="css/grid.css" rel="stylesheet"> -->
 	<script>
 		let href,paremeter,token,data;
 		let groupSet = new Set();
@@ -87,6 +88,32 @@
 	.group{
 		display: none;
 	}
+	.row {
+	  margin-bottom: 1rem;
+	}
+	.row .row {
+	  margin-top: 1rem;
+	  margin-bottom: 0;
+	}
+	[class*="col-"] {
+	  padding-top: 1rem;
+	  padding-bottom: 1rem;
+	  
+	}
+	.disposeJoin{
+		background-color: rgba(86, 61, 124, .15);
+	  	border: 1px solid rgba(86, 61, 124, .2);
+	}
+	.disposeJoinArea{
+		margin-left: 20%;
+		margin-bottom: 0%;
+	}
+	.ReqDonebtn , .Reqbtn{
+		background-color: rgba(230,226,235);
+	}
+	.sentReq{
+		background-color: rgb(230,226,235);
+	}
 	</style>
 </head>
 </head>
@@ -108,14 +135,18 @@
 
               <button class="follow nav-link">Subscribe</button>
             </li>
-            <li class="nav-item">
-              <button class="logout nav-link">log out</button>
-            </li>
+  
 			<li class="nav-item">
               <button class="setting_group nav-link">Set group</button>
             </li>
 			<li class="nav-item">
           		<button class="btn_joinGroup nav-link">Join group</button>
+            </li>
+            <li class="nav-item">
+              <button class="startWorkshop nav-link">Start WorkShop</button>
+            </li>
+             <li class="nav-item">
+              <button class="logout nav-link">log out</button>
             </li>
           </ul>
           <form class="form-inline mt-2 mt-md-0">
@@ -128,7 +159,7 @@
 
 	<div class="container">
 		<div class="picGroup"></div>
-		<div class="group">
+		<div id="group" class="group">
 			<div class="row">
 	        <div class="col-md-8 order-md-1 registerForm">
 	          <h4 class="mb-3">Creat New Group</h4>
@@ -242,6 +273,19 @@
 	        </div>
 	    </div>
 
+		<div class="row disposeJoinArea">
+	        <div class="col-4 disposeJoin">New Requests</div>
+	        <div class="col-4 disposeJoin">Member</div>
+	        <!-- <div class="col-4 disposeJoin">.col-6</div> -->
+      	</div>
+      	<div id="appendlist"></div>
+      	<div class="row disposeJoinArea">
+	         <button class="btn btn-primary btn-lg sentReq col-4 ">Save</button>
+			 <button class="btn btn-primary btn-lg CancelReq col-4 ">Cancel</button>
+	        <!-- <div class="col-4 disposeJoin">.col-6</div> -->
+      	</div>
+
+
 	</div>
 
 </div>
@@ -262,8 +306,7 @@
 			<ul id="alreadyC" class="alreadyC"></ul><br>
 		</div>
 		<div>
-				<button class="sentReq">Save</button><br>
-				<button class="sentReq">Cancel </button><br>
+
 		</div>
 
 	</div>
@@ -301,6 +344,7 @@
 		let obj={};
 		obj.token=token;
 		obj.T_num=T_num;
+		$('.items').css({'display':'none'});
 		$.ajax({
 				url:'model/reqDisplay.php',
 				method: 'GET',
@@ -310,23 +354,69 @@
 					console.log("result+"+result);
 					let data=JSON.parse(result);
 					let strReq="";
-					let ReqDone="";
+					let reqDone="";
 					if(result!=false){
-						// $('.unconfirm').val("");
-						// $('.alreadyC').val("");  
+
 						document.getElementById("unconfirm").innerHTML = " ";
 						document.getElementById("alreadyC").innerHTML = " ";
-
 						for (let i = 0; i < data.Req.length; i++) {
-							strReq+=add_button(" ","Reqbtn",data.Req[i].U_name,"proposeReq("+T_num+","+data.Req[i].U_num+")")+"<br>";
-							// console.log(strReq);
+							strReq+=add_button(" ","Reqbtn",data.Req[i].U_name,"proposeReq("+T_num+","+data.Req[i].U_num+")")+";";
 						}
-						for ( i = 0; i < data.ReqDone.length; i++) {
-							ReqDone+=add_button(" ","ReqDonebtn",data.ReqDone[i].U_name,"proposeDonereq("+T_num+","+data.ReqDone[i].U_num+")" )+"<br>";
 
+						for ( i = 0; i < data.ReqDone.length; i++) {
+							reqDone+=add_button(" ","ReqDonebtn",data.ReqDone[i].U_name,"proposeDonereq("+T_num+","+data.ReqDone[i].U_num+")" )+";";
 						}
-							$('#unconfirm').append(strReq);
-							$('#alreadyC').append(ReqDone);
+						
+						strReq=strReq.split(";");
+						reqDone=reqDone.split(";");
+
+					
+						if( strReq.length > reqDone.length){
+
+							for(let i=0; i<strReq.length-1 ; i++){
+								let str="";
+
+								if(reqDone[i]!= undefined ){
+									console.log("1");
+									str+=add_div("","col-4 disposeJoin items",strReq[i]);
+									str+=add_div("","col-4 disposeJoin items",reqDone[i]);
+									
+								}else{
+									console.log("2");
+									str+=add_div("","col-4 disposeJoin items",strReq[i]);
+									str+=add_div("","col-4 disposeJoin items","");
+									
+								}
+								
+								$('#appendlist').append(add_div(" ","row disposeJoinArea",str));
+							}
+
+						}else{
+
+							for(let i=0; i<reqDone.length-1 ; i++){
+								let str="";
+
+								if(strReq[i] != undefined ){
+									console.log("3");
+									
+									str+=add_div("","col-4 disposeJoin items",strReq[i]);
+									str+=add_div("","col-4 disposeJoin items",reqDone[i]);
+								}else{
+									console.log("4");
+									str+=add_div("","col-4 disposeJoin items","");
+									str+=add_div("","col-4 disposeJoin items",reqDone[i]);
+									
+									
+								}
+								
+								$('#appendlist').append(add_div(" ","row disposeJoinArea items",str));
+							}
+						}
+
+
+
+
+
 					}
 				}
 	});
@@ -577,7 +667,6 @@
 					for (let i =0 ; i<data.group.length; i++) {
 						if(groupSet.has(data.group[i].T_num)==false){
 							groupContent+=add_button("","groupListofJoin",data.group[i].T_name,"reqJoin('"+token[1]+"',"+data.group[i].T_num+")");
-							// console.log("groupContent="+groupContent);
 							groupSet.add(data.group[i].T_num);
 						}	
 					}
@@ -692,6 +781,9 @@
 				}
 			});
 		}
+
+	});
+	$('.startWorkshop').click(function(){
 
 	});
 </script>

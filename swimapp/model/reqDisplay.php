@@ -21,11 +21,11 @@ $sqlGrouplist='SELECT * FROM `USER` WHERE `U_num` IN (SELECT `U_num` FROM `Group
 
 $resGL = $conn->query($sqlGrouplist_N);
 
-if(@$resGL->num_rows==0){
+// if(@$resGL->num_rows==0){
 
-	echo "false";
+	// echo "false";
 
-}else{
+// }else{
 	$arrNoReq;
 	echo "{ \"ReqDone\":[";
 	$resALLGL=$conn->query($sqlGrouplist);
@@ -53,7 +53,7 @@ if(@$resGL->num_rows==0){
 
 
 	echo "]}";
-}
+// }
 $conn->close();
 
 ?>
