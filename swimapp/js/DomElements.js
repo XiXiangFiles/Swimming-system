@@ -26,3 +26,11 @@ function add_p(Id,Class,Content){
 	let tag="<p "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\">"+Content+"</p>";
 	return tag;
 }
+function add_tr(Id,Class,Content){
+	let tag="<tr "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\">"+Content+"</tr>";
+	return tag;
+}
+function add_td(Id,Class,Content){
+	let tag="<td "+"id= "+"\""+Id+"\""+"class="+"\""+Class+"\">"+Content+"</td>";
+	return tag;
+}
