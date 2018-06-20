@@ -138,6 +138,10 @@
 	/* Events */
 	.agenda .agenda-events {  } 
 	.agenda .agenda-events .agenda-event {  } 
+	.workshop_btn{
+		background-color: #5599FF;
+		color:white;
+	}
 
 	@media (max-width: 767px) {
 	    
@@ -320,7 +324,7 @@
     </p>
     
     <div class="alert alert-warning">
-        <h4>You don't wanna swimming, you can get out or go home. if you choose to stay here, go hard and exnjoy your pain.</h4>
+        <h4>You don't wanna swimming, you can get out or go home. if you choose to stay here, go hard and enjoy your pain.</h4>
         <p></p>
     </div>
 
@@ -328,7 +332,7 @@
 
     <div class="agenda">
         <div class="table-responsive">
-        	<!-- <h4 class="mb-3">Creat New Group</h4> -->
+        	<h4 class="mb-3" id="tableTitle"></h4>
             <table class="table table-condensed table-bordered">
                
             </table>
@@ -493,6 +497,9 @@
 	$('.setting_group').click(function(){
 		let groupContent="";
 		countSettingGroup++;
+
+		$('.table').css({'display':'none'});
+		$('.workshopArea').css({'display':'none'});
 		if((countSettingGroup%2)==1){
 			$('.picGroup').css({'display':'block'});
 			$('.group').css({
@@ -833,9 +840,13 @@
 
 	});
 	$('.startWorkshop').click(function(){
-
-	});
-	$.ajax({
+		$('.workshopArea').css({'display':'block'});
+		$('.table').css({'display':'none'});
+		let tableStr=add_table("","table table-condensed table-bordered"," ");
+		$('.table-responsive').append(tableStr);
+		$('.picGroup').css({'display':'none'});
+		$('.group').css({'display':'none'});
+		$.ajax({
 		url:"model/workshopDetail.php?token="+token[1],
 				method:"GET",
 				cache:false,
@@ -849,7 +860,13 @@
 						let tbody="";
 						let tr="";
 
-						title=add_h4(" ","mb-3",data.workshopes[i].T_name);
+						
+						if(i==0){
+							document.getElementById('tableTitle').innerHTML=data.workshopes[i].T_name;
+							// $('.tableTitle').append();
+						}else{
+							title=add_h4(" ","mb-3",data.workshopes[i].T_name);
+						}
 						
 						let strThead="";
 						let agendaDate="";
@@ -885,7 +902,72 @@
 								td_1=add_td(" ","agenda-date active","",divDate);
 								td_2=add_td(" ","agenda-time active","",divTime);
 								td_3=add_td(" ","agenda-events active","",divDetail);
-								td_4=add_td(" ","agenda-events active","",add_button("","","into workshop","intoWorkshop('"+token[1]+"\',\'"+timeDetail.time+"'"+",'"+timeDetail.Set+"')"));
+								td_4=add_td(" ","agenda-events active","",add_button("","btn btn-primary btn-lg btn-block workshop_btn","into workshop","intoWorkshop('"+token[1]+"\',\'"+timeDetail.time+"'"+",'"+timeDetail.Set+"')"));
+								tr+=add_tr(" "," ",td_1+td_2+td_3+td_4);
+							}
+						}				
+						tbody+=add_tbody(" "," ",tr);
+						$('.table').append(title,thead,tbody);
+					}
+				}
+		});
+	});
+	$.ajax({
+		url:"model/workshopDetail.php?token="+token[1],
+				method:"GET",
+				cache:false,
+				success:function(result){
+					let data=JSON.parse(result);
+					
+
+					for(let i=0; i< data.workshopes.length ; i++){
+						let title="";
+						let thead="";
+						let tbody="";
+						let tr="";
+
+						if(i==0){
+							document.getElementById('tableTitle').innerHTML=data.workshopes[i].T_name;
+							// $('.tableTitle').append();
+						}else{
+							title=add_h4(" ","mb-3",data.workshopes[i].T_name);
+						}
+						
+						let strThead="";
+						let agendaDate="";
+						let strAgendaDate="";
+						strThead+=title;
+						strThead+=add_th("","", "Date");
+						strThead+=add_th("","", "Time");
+						strThead+=add_th("","", "Event");
+						strThead+=add_th("","", "Start");
+						thead+=add_thead(" ","　",strThead);
+						let dateS;
+						
+						let divDetail="";
+						let divTime="";
+
+						for(let j=0; j < data.workshopes[i].list.length; j++ ){
+							let divDate="";
+							dateS=data.workshopes[i].list[j].P_name.split("-");
+							divDate+=add_div(" ","dayofmonth",dateS[2]);
+							divDate+=add_div(" ","dayofweek",dateS[1]);
+							divDate+=add_div(" ","shortdate",dateS[0]);
+
+							for(let k=0 ; k<data.workshopes[i].list[j].workshop.length; k++){
+								let td_1="";
+								let td_2="";
+								let td_3="";
+								let td_4="";
+								let timeDetail={};
+								timeDetail.time=data.workshopes[i].list[j].workshop[k].Time;
+								timeDetail.Set=data.workshopes[i].list[j].workshop[k].set;
+								divTime=add_div(" "," ",JSON.stringify(timeDetail));
+								divDetail=add_div(" ","agenda-event",data.workshopes[i].list[j].workshop[k].PL_detail);
+								td_1=add_td(" ","agenda-date active","",divDate);
+								td_2=add_td(" ","agenda-time active","",divTime);
+								td_3=add_td(" ","agenda-events active","",divDetail);
+								td_4=add_td(" ","agenda-events active","",add_button("","btn btn-primary btn-lg btn-block workshop_btn","into workshop","intoWorkshop('"+token[1]+"\',\'"+timeDetail.time+"'"+",'"+timeDetail.Set+"')"));
 								tr+=add_tr(" "," ",td_1+td_2+td_3+td_4);
 							}
 						}				

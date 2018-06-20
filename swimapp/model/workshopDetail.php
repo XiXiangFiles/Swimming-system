@@ -24,7 +24,8 @@
 			$row=$resCheck->fetch_assoc();
 			$U_num=$row['U_num'];
 
-			$sqlGetTeamNum="SELECT * FROM `Team` WHERE `U_num` = $U_num";
+			// $sqlGetTeamNum="SELECT * FROM `Group_List` WHERE `U_num` = $U_num";
+			$sqlGetTeamNum="SELECT * FROM `Team` WHERE `T_num` in(SELECT `T_num` FROM `Group_List` WHERE `U_num` = $U_num)";
 
 			$resCheckTeamNum=$conn->query($sqlGetTeamNum);
 
