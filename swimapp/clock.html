@@ -15,16 +15,18 @@
 	
 <script>
 	function gettoken(){
-		let href,paremeter,token;
+		let href,paremeter,token,str;
 		try{
 			href=location.href;
 			paremeter=href.split('?');
 			token=paremeter[1].split("=");
+			str=token[1].split('&');
+			// console.log(str[0]);
 		}catch(e){
 			document.location.href="index.html";
 		}
 		
-		return token[1];
+		return str[0];
 	}
 	let data={};
 	data.token=gettoken();
@@ -253,7 +255,31 @@
 			
 		}	
 	});
+</script>
+<script>
+	
+		let href=location.href;
+		let paremeter=href.split('?');
+		let dataTime=paremeter[1].split("&");
+		for(let i=1; i<dataTime.length ; i++){
+			if(i==1){
+				let getTime=dataTime[i].split('=');
+				
+				let str=getTime[i].split(",");
+				$(".P").val(str.length);
+				for(let j=0;j<str.length;j++){
+					program.push(str[j]);
+				}
+			}else if(i==2){
+				let str=dataTime[i].split('=');
+				$(".SET").val(str[1]);
+			}
 
+		}
+try{}catch(e){
+
+	}
+	
 </script>
 </body>
 </html>

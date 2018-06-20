@@ -465,9 +465,12 @@
 
 					}
 				}
-	});
-		
-		
+		});
+	}
+	function intoWorkshop(token,Time,set){
+		// console.log("Time = "+Time+" set= "+set);
+		// console.log("clock.html?token="+token+"&Time="+Time+"&Set="+set);
+		document.location.href="clock.html?token="+token+"&Time="+Time+"&Set="+set;
 	}
 	$('.clock').click(function(){
 		document.location.href="clock.html?token="+token[1];
@@ -847,8 +850,6 @@
 						let tr="";
 
 						title=add_h4(" ","mb-3",data.workshopes[i].T_name);
-				
-						// $('.table').append(title);
 						
 						let strThead="";
 						let agendaDate="";
@@ -884,11 +885,9 @@
 								td_1=add_td(" ","agenda-date active","",divDate);
 								td_2=add_td(" ","agenda-time active","",divTime);
 								td_3=add_td(" ","agenda-events active","",divDetail);
-								td_4=add_td(" ","agenda-events active","",add_button("","","into workshop"));
+								td_4=add_td(" ","agenda-events active","",add_button("","","into workshop","intoWorkshop('"+token[1]+"\',\'"+timeDetail.time+"'"+",'"+timeDetail.Set+"')"));
 								tr+=add_tr(" "," ",td_1+td_2+td_3+td_4);
-
 							}
-
 						}				
 						tbody+=add_tbody(" "," ",tr);
 						$('.table').append(title,thead,tbody);
