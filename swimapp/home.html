@@ -405,7 +405,7 @@
 				data:obj,
 				cache: false,
 				success: function(result){
-					console.log("result+"+result);
+					// console.log("result+"+result);
 					let data=JSON.parse(result);
 					let strReq="";
 					let reqDone="";
@@ -431,12 +431,12 @@
 								let str="";
 
 								if(reqDone[i]!= undefined ){
-									console.log("1");
+									// console.log("1");
 									str+=add_div("","col-4 disposeJoin items",strReq[i]);
 									str+=add_div("","col-4 disposeJoin items",reqDone[i]);
 									
 								}else{
-									console.log("2");
+									// console.log("2");
 									str+=add_div("","col-4 disposeJoin items",strReq[i]);
 									str+=add_div("","col-4 disposeJoin items","");
 									
@@ -451,12 +451,12 @@
 								let str="";
 
 								if(strReq[i] != undefined ){
-									console.log("3");
+									// console.log("3");
 									
 									str+=add_div("","col-4 disposeJoin items",strReq[i]);
 									str+=add_div("","col-4 disposeJoin items",reqDone[i]);
 								}else{
-									console.log("4");
+									// console.log("4");
 									str+=add_div("","col-4 disposeJoin items","");
 									str+=add_div("","col-4 disposeJoin items",reqDone[i]);
 									
@@ -500,18 +500,17 @@
 
 		$('.table').css({'display':'none'});
 		$('.workshopArea').css({'display':'none'});
-		if((countSettingGroup%2)==1){
-			$('.picGroup').css({'display':'block'});
-			$('.group').css({
-				'display':'block'	
-			});
-		}else{
+		
 			$('.picGroup').css({'display':'none'});
 			$('.group').css({
 				'display':'none'	
 			});
+
+			$('.picGroup').css({'display':'block'});
+			$('.group').css({
+				'display':'block'	
+			});
 		
-		}
 		$.ajax({
 			url:"model/list_group.php?token="+token[1],
 			method: 'GET',
@@ -546,7 +545,7 @@
 
                 			root = json;
                 			treeData=json;
-                			console.log("~~~~"+JSON.stringify(json));
+                			// console.log("~~~~"+JSON.stringify(json));
                 			update();
                 		});
 
@@ -604,7 +603,7 @@
 
 // Toggle children on click.
 							function click(d) {
-								console.log("click="+JSON.stringify(treeData));
+								// console.log("click="+JSON.stringify(treeData));
 								// console.log(tree.children.length);
 								let target=JSON.parse(JSON.stringify(d));
 								let tree=JSON.parse(JSON.stringify(treeData));
@@ -656,7 +655,7 @@
 					for(let i=0; i<data.group.length ; i++){
 						str+=add_option(data.group[i].T_num,data.group[i].T_name);	
 					}
-					console.log(str);
+					// console.log(str);
 					document.getElementById('listGroup').innerHTML=str;
 					$('.group_list').append(groupContent);
 				}
@@ -699,9 +698,7 @@
 		}else{
 			txt = "取消新增";
 		}
-			// $(".group_result").val(txt);
 			document.getElementById("group_result").innerHTML = txt;
-			// location.reload();
 		});
 	let temp = '';
 	$('.btn_joinGroup').click(function(){
@@ -717,15 +714,145 @@
 			success:function(data_o){
 				// console.log("joinGroup"+data_o);
 				if(data!=false){
-					temp = data_o;
+
+
+					$('svg').css({'display':'none'});
+
 					let data=JSON.parse(data_o);
-					// console.log("looooooooog:   " + data);
-					for (let i =0 ; i<data.group.length; i++) {
-						if(groupSet.has(data.group[i].T_num)==false){
-							groupContent+=add_button("","groupListofJoin",data.group[i].T_name,"reqJoin('"+token[1]+"',"+data.group[i].T_num+")");
-							groupSet.add(data.group[i].T_num);
-						}	
-					}
+
+                		var width = 480,
+                		height = 250,
+                		root;
+
+                		var force = d3.layout.force()
+                		.linkDistance(80)
+                		.charge(-120)
+                		.gravity(.05)
+                		.size([width, height])
+                		.on("tick", tick);
+
+                		var svg = d3.select(".picGroup").append("svg")
+                		.attr("width", width)
+                		.attr("height", height);
+
+                		var link = svg.selectAll(".link"),
+                		node = svg.selectAll(".node");
+
+                		d3.json('json/allGroupMember.json', function(error, json) {
+                			if (error) throw error;
+
+                			root = json;
+                			treeData=json;
+                			// console.log("~~~~"+JSON.stringify(json));
+                			update();
+                		});
+
+                		function update() {
+                			var nodes = flatten(root),
+                			links = d3.layout.tree().links(nodes);
+							  force
+							  .nodes(nodes)
+							  .links(links)
+							  .start();
+
+							  // Update links.
+							  link = link.data(links, function(d) { return d.target.id; });
+
+							  link.exit().remove();
+
+							  link.enter().insert("line", ".node")
+							  .attr("class", "link");
+
+							  // Update nodes.
+							  node = node.data(nodes, function(d) { return d.id; });
+
+							  node.exit().remove();
+
+							  var nodeEnter = node.enter().append("g")
+							  .attr("class", "node")
+							  .on("click", click)
+							  .call(force.drag);
+
+							  nodeEnter.append("circle")
+							  .attr("r", function(d) { return Math.sqrt(d.size) / 5 || 4.5; });
+
+							  nodeEnter.append("text")
+							  .attr("dy", ".35em")
+							  .text(function(d) { return d.name; });
+
+							  node.select("circle")
+							  .style("fill", color);
+							}
+
+							function tick() {
+								link.attr("x1", function(d) { return d.source.x; })
+								.attr("y1", function(d) { return d.source.y; })
+								.attr("x2", function(d) { return d.target.x; })
+								.attr("y2", function(d) { return d.target.y; });
+
+								node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+							}
+
+							function color(d) {
+							  return d._children ? "#3182bd" // collapsed package
+							      : d.children ? "#c6dbef" // expanded package
+							      : "#fd8d3c"; // leaf node
+							  }
+
+// Toggle children on click.
+							function click(d) {
+								// console.log("click="+JSON.stringify(treeData));
+								// console.log(tree.children.length);
+								let target=JSON.parse(JSON.stringify(d));
+								let tree=JSON.parse(JSON.stringify(treeData));
+								// console.log("eeee "+tree.children[0].name);
+
+								try{
+									for (let i =0; i<tree.children.length ; i++) {
+										if(tree.children[i].name == target.name){
+											// console.log("T_num= "+ tree.children[i].T_num);
+											reqJoin(token[1],tree.children[i].T_num);
+									}
+								}
+								}catch(e){
+
+								}
+								
+							  if (d3.event.defaultPrevented) return; // ignore drag
+							  if (d.children) {
+							  	d._children = d.children;
+							  	d.children = null;
+							  } else {
+							  	d.children = d._children;
+							  	d._children = null;
+							  }
+							  update();
+							}
+
+// Returns a list of all nodes under the root.
+							function flatten(root) {
+								var nodes = [], i = 0;
+
+								function recurse(node) {
+									if (node.children) node.children.forEach(recurse);
+									if (!node.id) node.id = ++i;
+									nodes.push(node);
+								}
+
+								recurse(root);
+								return nodes;
+							}
+
+
+					// temp = data_o;
+					// let data=JSON.parse(data_o);
+					// // console.log("looooooooog:   " + data);
+					// for (let i =0 ; i<data.group.length; i++) {
+					// 	if(groupSet.has(data.group[i].T_num)==false){
+					// 		groupContent+=add_button("","groupListofJoin",data.group[i].T_name,"reqJoin('"+token[1]+"',"+data.group[i].T_num+")");
+					// 		groupSet.add(data.group[i].T_num);
+					// 	}	
+					// }
 					$('.joinGroup').append(groupContent);
 				}
 			}
@@ -733,8 +860,8 @@
 	});
 
 	$('.sentReq').off().on('click',function(){
-		console.log("work");
-		console.log(ReqCancelSet);
+		// console.log("work");
+		// console.log(ReqCancelSet);
 		if(ReqJoinSet.size >0 || ReqCancelSet.size >0){
 			let obj={};
 			obj.T_num=ReqT_num;
@@ -752,7 +879,7 @@
 
 
 
-			console.log("obj= "+JSON.stringify(obj));
+			// console.log("obj= "+JSON.stringify(obj));
 			$.ajax({
 				url:"model/adjustMember.php",
 				method:"GET",
@@ -766,16 +893,16 @@
 
 	});
 	$('.saveWorkshop').off().on('click',function(){
-		console.log("-----");
+		// console.log("-----");
 		let workshopInfo=$('.workshopInfo').val();
 		let Min= parseInt($('.setMin').val());
 		let Sec=parseInt($('.setSec').val());
 		let WorkshopSet= parseInt( $('.setSet').val());
-		console.log("isNaN(Min)= "+isNaN(Min)+" "+ Min);
-		console.log("isNaN(Sec)= "+isNaN(Sec)+" "+ Sec);
-		console.log("isNaN(WorkshopSet)= "+isNaN(WorkshopSet) +" "+ WorkshopSet);
+		// console.log("isNaN(Min)= "+isNaN(Min)+" "+ Min);
+		// console.log("isNaN(Sec)= "+isNaN(Sec)+" "+ Sec);
+		// console.log("isNaN(WorkshopSet)= "+isNaN(WorkshopSet) +" "+ WorkshopSet);
 		if(!isNaN(Min) && !isNaN(Sec) && !isNaN(WorkshopSet)){
-			console.log("-----2");
+			// console.log("-----2");
 			if(Min==0 && Sec==0){
 				alert("Please input workshop time.");
 			}else{
@@ -806,38 +933,48 @@
 	});
 	$('.clearWorkshop').click(function(){
 		workshopTime=[];
-		$('.setDate').val("");
-		$('.workshopInfo').val("");
+		// $('.setDate').val("");
+		// $('.workshopInfo').val("");
 		$('.setMin').val(0);
 		$('.setSec').val(0);
 		$('.setSet').val(1);
 	})
 	$('.sendWorkshop').off().on('click',function(){
-		let workshopDate=$('.setDate').val();
-		if(workshopDate=="")
-			alert("Please select Date.");
-		else{
-			let obj={};
-			obj.token=token[1];
-			obj.T_num=$('#listGroup').val();
-			obj.workshopInfo=$('.workshopInfo').val();
-			obj.workshopDate=workshopDate;
-			obj.workshopTime=workshopTime;
-			obj.set=$('.setSet').val();
-			obj.itemInfo=$('.itemInfo').val();
-			
-			console.log("JSON.stringify= "+JSON.stringify(obj));
-			$.ajax({
-				url:"model/saveWorkshop.php",
-				method:"POST",
-				cache:false,
-				data:obj,
-				success:function(result){
-					console.log("saveWorkshop= "+result);
-				}
-			});
+		let result = confirm("確定送出課程嗎?");
+		if(result==true){
+			let workshopDate=$('.setDate').val();
+			if(workshopDate=="")
+				alert("Please select Date.");
+			else{
+				let obj={};
+				obj.token=token[1];
+				obj.T_num=$('#listGroup').val();
+				obj.workshopInfo=$('.workshopInfo').val();
+				obj.workshopDate=workshopDate;
+				obj.workshopTime=workshopTime;
+				obj.set=$('.setSet').val();
+				obj.itemInfo=$('.itemInfo').val();
+				
+				// console.log("JSON.stringify= "+JSON.stringify(obj));
+				$.ajax({
+					url:"model/saveWorkshop.php",
+					method:"POST",
+					cache:false,
+					data:obj,
+					success:function(result){
+						// console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+result);
+						if(result=="true"){
+							alert("成功!");
+								$('.setMin').val(0);
+								$('.setSec').val(0);
+								$('.setSet').val(1);
+						}
+						else
+							alert("失敗");
+					}
+				});
+			}
 		}
-
 	});
 	$('.startWorkshop').click(function(){
 		$('.workshopArea').css({'display':'block'});
