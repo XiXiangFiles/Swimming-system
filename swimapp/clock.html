@@ -77,7 +77,7 @@
 	let length=0;
 	let keep;//record set
 	let time={};
-	pub_client=mqtt.connect("ws://"+"140.119.163.195:10000");
+// 	pub_client=mqtt.connect("ws://"+"140.119.163.195:10000");
 	function startTime() {
 		// time={};
 		time.p=$(".P").val();
@@ -141,7 +141,7 @@
 	   	}
 		try{
 			
-			pub_client.publish(gettoken(),JSON.stringify(time),0);
+// 			pub_client.publish(gettoken(),JSON.stringify(time),0);
 		}catch(e){
 			console.log("error="+e);
 		}
